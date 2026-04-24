@@ -318,7 +318,21 @@ async function getFirebaseProfile(userId, idToken) {
 async function authSignIn(email, password) {
   const { ok, data } = await _fbPost('signInWithPassword', { email, password, returnSecureToken: true });
   if (!ok) return { success: false, error: _friendlyError(data) };
-  if (!data.emailVerified) {
+
+  // signInWithPassword can return a stale emailVerified:false right after verification;
+  // re-check with lookup to get the real-time status
+  let emailVerified = data.emailVerified;
+  if (!emailVerified) {
+    const infoRes = await fetch(`${_FB_AUTH}:lookup?key=${FIREBASE_API_KEY}`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ idToken: data.idToken }),
+    });
+    const info = await infoRes.json();
+    emailVerified = info?.users?.[0]?.emailVerified || false;
+  }
+
+  if (!emailVerified) {
     return { success: false, error: 'Please confirm your email address first — check your inbox.' };
   }
   await _saveSession(data);
