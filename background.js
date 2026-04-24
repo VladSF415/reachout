@@ -4,8 +4,7 @@
 // ── Config ─────────────────────────────────────────────────────────────────────
 const FIREBASE_API_KEY    = 'AIzaSyCuVPYkibzv6r_zf8ZLC8WFPCWiJu35fG0';
 const FIREBASE_PROJECT_ID = 'reachout-4e9e8';
-// TODO: Replace with your Railway URL after first deploy
-const WEBHOOK_BASE        = 'YOUR_RAILWAY_URL';
+const WEBHOOK_BASE        = 'https://reachout-production.up.railway.app';
 
 const _FB_AUTH  = 'https://identitytoolkit.googleapis.com/v1/accounts';
 const _FB_TOKEN = 'https://securetoken.googleapis.com/v1/token';
