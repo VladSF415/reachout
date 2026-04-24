@@ -50,6 +50,36 @@ const MONTHLY_CAPS = { free: 10, pro: 300 };
 
 app.get('/', (_req, res) => res.send('ReachOut webhook server OK'));
 
+// ── GET /get-profile ──────────────────────────────────────────────────────────
+app.post('/get-profile', async (req, res) => {
+  const { userId, idToken } = req.body || {};
+  if (!userId || !idToken) return res.status(400).json({ error: 'Missing fields.' });
+
+  const decoded = await verifyToken(idToken);
+  if (!decoded || decoded.uid !== userId) return res.status(401).json({ error: 'Unauthorized.' });
+
+  try {
+    const db  = getDb();
+    const doc = await db.collection('users').doc(userId).get();
+
+    if (!doc.exists) {
+      await db.collection('users').doc(userId).set({
+        plan: 'free', email_lookups_used: 0, email_lookups_month: 0,
+      }, { merge: true });
+      return res.json({ profile: { plan: 'free', email_lookups_used: 0 } });
+    }
+
+    const d = doc.data();
+    const thisMonth = Number(new Date().toISOString().slice(0, 7).replace('-', ''));
+    const used = d.email_lookups_month === thisMonth ? (d.email_lookups_used || 0) : 0;
+
+    res.json({ profile: { plan: d.plan || 'free', email_lookups_used: used } });
+  } catch (err) {
+    console.error('get-profile error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // ── Auth helper ───────────────────────────────────────────────────────────────
 async function verifyToken(idToken) {
   try {

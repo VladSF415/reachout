@@ -95,9 +95,19 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (action === 'GET_SESSION') { getSession().then(sendResponse); return true; }
 
   if (action === 'GET_FIREBASE_PROFILE') {
-    getSession().then(session => {
+    getSession().then(async session => {
       if (!session) { sendResponse({ profile: null }); return; }
-      getFirebaseProfile(session.user.id, session.access_token).then(profile => sendResponse({ profile }));
+      try {
+        const res = await fetch(`${WEBHOOK_BASE}/get-profile`, {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ userId: session.user.id, idToken: session.access_token }),
+        });
+        const data = await res.json();
+        sendResponse({ profile: data.profile || null });
+      } catch {
+        sendResponse({ profile: null });
+      }
     });
     return true;
   }
