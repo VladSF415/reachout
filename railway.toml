@@ -1,0 +1,8 @@
+[build]
+builder = "nixpacks"
+buildCommand = "cd webhook-server && npm install"
+
+[deploy]
+startCommand = "node webhook-server/index.js"
+restartPolicyType = "on_failure"
+healthcheckPath = "/"

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ReachOut</title>
+  <link rel="stylesheet" href="panel.css"/>
+</head>
+<body>
+  <div class="ro-app">
+
+    <!-- Header -->
+    <header class="ro-header">
+      <div class="ro-logo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.45 2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.89A16 16 0 0 0 14 15.09l1.99-.91a2 2 0 0 1 2.11.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" fill="#059669" opacity="0.15" stroke="#059669" stroke-width="1.5"/>
+        </svg>
+        <span class="ro-logo-text">ReachOut</span>
+      </div>
+      <button class="ro-icon-btn" id="ro-refresh-btn" title="Re-scrape this LinkedIn profile">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+          <path d="M21 3v5h-5"/>
+          <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+          <path d="M8 16H3v5"/>
+        </svg>
+      </button>
+    </header>
+
+    <!-- Tabs -->
+    <nav class="ro-tabs">
+      <button class="ro-tab active" data-tab="finder">Finder</button>
+      <button class="ro-tab" data-tab="outreach">Outreach</button>
+      <button class="ro-tab" data-tab="pipeline">Pipeline</button>
+      <button class="ro-tab" data-tab="account">Account</button>
+    </nav>
+
+    <!-- ── FINDER TAB ──────────────────────────────────────────────────────── -->
+    <section class="ro-panel active" id="tab-finder">
+
+      <!-- Not on a LinkedIn profile -->
+      <div class="ro-empty" id="ro-no-profile">
+        <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#c7c7c7" stroke-width="1.5">
+          <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+          <rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>
+        </svg>
+        <p>Navigate to a LinkedIn profile page (linkedin.com/in/…) to find their email.</p>
+      </div>
+
+      <!-- Profile detected -->
+      <div id="ro-profile-card" hidden>
+
+        <!-- Profile summary -->
+        <div class="ro-profile-meta" id="ro-profile-meta">
+          <div class="ro-profile-name" id="ro-profile-name"></div>
+          <div class="ro-profile-title" id="ro-profile-title"></div>
+          <div class="ro-profile-company" id="ro-profile-company"></div>
+        </div>
+
+        <!-- Find email -->
+        <button class="ro-btn ro-btn-primary" id="ro-find-email-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+          Find Email
+        </button>
+
+        <!-- Spinner -->
+        <div class="ro-spinner" id="ro-find-spinner" hidden>
+          <div class="ro-spinner-dot"></div>
+          <span>Looking up email…</span>
+        </div>
+
+        <!-- Results -->
+        <div id="ro-email-results" hidden>
+          <div class="ro-results-label">Found emails</div>
+          <ul class="ro-email-list" id="ro-email-list"></ul>
+          <button class="ro-btn ro-btn-secondary" id="ro-save-contact-btn" style="margin-top:8px">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+              <polyline points="17 21 17 13 7 13 7 21"/>
+              <polyline points="7 3 7 8 15 8"/>
+            </svg>
+            Save to Pipeline
+          </button>
+        </div>
+
+        <!-- Error -->
+        <div class="ro-msg ro-msg-error" id="ro-find-error" hidden></div>
+        <!-- Limit warning -->
+        <div class="ro-msg ro-msg-warn" id="ro-find-limit" hidden>
+          Monthly free limit reached (10/month).
+          <button class="ro-text-btn" id="ro-upgrade-from-finder">Upgrade to Pro →</button>
+        </div>
+        <!-- Save success -->
+        <div class="ro-msg ro-msg-success" id="ro-save-success" hidden>Contact saved to pipeline!</div>
+      </div>
+    </section>
+
+    <!-- ── OUTREACH TAB ────────────────────────────────────────────────────── -->
+    <section class="ro-panel" id="tab-outreach">
+
+      <!-- Sender profile setup banner -->
+      <div class="ro-setup-banner" id="ro-setup-banner">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        <div class="ro-setup-banner-body">
+          <strong>Set up your profile</strong>
+          <span>Add your name, company, and what you offer to personalize outreach messages.</span>
+        </div>
+        <button class="ro-btn ro-btn-primary ro-setup-btn" id="ro-open-setup-btn">Set Up</button>
+      </div>
+
+      <!-- Sender profile setup form (inline) -->
+      <div class="ro-setup-form" id="ro-setup-form" hidden>
+        <div class="ro-form-row">
+          <label class="ro-label">Your name</label>
+          <input type="text" class="ro-input" id="ro-sender-name" placeholder="e.g. Alex Johnson"/>
+        </div>
+        <div class="ro-form-row">
+          <label class="ro-label">Your company</label>
+          <input type="text" class="ro-input" id="ro-sender-company" placeholder="e.g. Acme Corp"/>
+        </div>
+        <div class="ro-form-row">
+          <label class="ro-label">What you offer (1-2 sentences)</label>
+          <textarea class="ro-input ro-textarea-sm" id="ro-sender-offer" placeholder="e.g. We help SaaS companies cut churn by 30% with personalized onboarding flows."></textarea>
+        </div>
+        <button class="ro-btn ro-btn-primary" id="ro-save-sender-btn">Save Profile</button>
+      </div>
+
+      <!-- No profile state -->
+      <div class="ro-empty" id="ro-outreach-no-profile" hidden>
+        <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#c7c7c7" stroke-width="1.5">
+          <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+          <rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>
+        </svg>
+        <p>Navigate to a LinkedIn profile to generate personalized outreach messages.</p>
+      </div>
+
+      <!-- Generate section -->
+      <div id="ro-outreach-card" hidden>
+        <div class="ro-profile-meta" id="ro-outreach-meta">
+          <div class="ro-profile-name" id="ro-outreach-name"></div>
+          <div class="ro-profile-company" id="ro-outreach-company"></div>
+        </div>
+
+        <button class="ro-btn ro-btn-primary" id="ro-generate-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          Generate Messages
+        </button>
+
+        <div class="ro-spinner" id="ro-gen-spinner" hidden>
+          <div class="ro-spinner-dot"></div>
+          <span>Generating outreach…</span>
+        </div>
+
+        <!-- Message output -->
+        <div id="ro-messages-output" hidden>
+
+          <div class="ro-msg-block">
+            <div class="ro-msg-header">
+              <span class="ro-msg-label">Connection Note</span>
+              <div class="ro-char-count" id="ro-conn-chars">0 / 300</div>
+              <button class="ro-text-btn ro-copy-btn" data-target="ro-conn-text">Copy</button>
+            </div>
+            <textarea class="ro-msg-textarea" id="ro-conn-text" rows="3" spellcheck="true"></textarea>
+          </div>
+
+          <div class="ro-msg-block">
+            <div class="ro-msg-header">
+              <span class="ro-msg-label">Cold DM</span>
+              <button class="ro-text-btn ro-copy-btn" data-target="ro-dm-text">Copy</button>
+            </div>
+            <textarea class="ro-msg-textarea" id="ro-dm-text" rows="6" spellcheck="true"></textarea>
+          </div>
+
+          <div class="ro-msg-block">
+            <div class="ro-msg-header">
+              <span class="ro-msg-label">Follow-up 1</span>
+              <button class="ro-text-btn ro-copy-btn" data-target="ro-fu1-text">Copy</button>
+            </div>
+            <textarea class="ro-msg-textarea" id="ro-fu1-text" rows="3" spellcheck="true"></textarea>
+          </div>
+
+          <div class="ro-msg-block">
+            <div class="ro-msg-header">
+              <span class="ro-msg-label">Follow-up 2</span>
+              <button class="ro-text-btn ro-copy-btn" data-target="ro-fu2-text">Copy</button>
+            </div>
+            <textarea class="ro-msg-textarea" id="ro-fu2-text" rows="3" spellcheck="true"></textarea>
+          </div>
+
+        </div>
+
+        <div class="ro-msg ro-msg-error" id="ro-gen-error" hidden></div>
+      </div>
+    </section>
+
+    <!-- ── PIPELINE TAB ────────────────────────────────────────────────────── -->
+    <section class="ro-panel" id="tab-pipeline">
+      <div class="ro-pipe-header">
+        <span class="ro-pipe-count" id="ro-pipe-count">0 contacts</span>
+        <div class="ro-pipe-actions">
+          <button class="ro-icon-btn" id="ro-export-btn" title="Export CSV">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="ro-pipe-empty" id="ro-pipe-empty">
+        <p>No contacts saved yet. Find an email on a LinkedIn profile and click "Save to Pipeline".</p>
+      </div>
+
+      <ul class="ro-contact-list" id="ro-contact-list"></ul>
+    </section>
+
+    <!-- ── ACCOUNT TAB ─────────────────────────────────────────────────────── -->
+    <section class="ro-panel" id="tab-account">
+
+      <!-- Signed out -->
+      <div id="ro-auth-section">
+        <p class="ro-auth-desc">Sign in to find emails and generate outreach (10 free lookups/month).</p>
+        <div class="ro-form-row">
+          <input type="email" class="ro-input" id="ro-email" placeholder="Email"/>
+        </div>
+        <div class="ro-form-row">
+          <input type="password" class="ro-input" id="ro-password" placeholder="Password"/>
+        </div>
+        <div class="ro-auth-msg" id="ro-auth-error" hidden></div>
+        <div class="ro-auth-btns">
+          <button class="ro-btn ro-btn-primary" id="ro-signin-btn">Sign In</button>
+          <button class="ro-btn ro-btn-secondary" id="ro-signup-btn">Create Account</button>
+        </div>
+      </div>
+
+      <!-- Signed in -->
+      <div id="ro-account-section" hidden>
+        <div class="ro-account-info">
+          <div class="ro-account-email" id="ro-account-email"></div>
+          <div class="ro-plan-badge" id="ro-plan-badge">Free</div>
+        </div>
+
+        <div class="ro-usage-row">
+          <span>Email lookups this month</span>
+          <span class="ro-usage-count" id="ro-usage-count">0 / 10</span>
+        </div>
+        <div class="ro-usage-bar">
+          <div class="ro-usage-fill" id="ro-usage-fill"></div>
+        </div>
+
+        <div class="ro-upgrade-box" id="ro-upgrade-box">
+          <div class="ro-upgrade-header">Upgrade to Pro</div>
+          <ul class="ro-upgrade-list">
+            <li>300 email lookups / month</li>
+            <li>Unlimited outreach generation</li>
+            <li>CSV export</li>
+          </ul>
+          <div class="ro-upgrade-price">$29<span>/month</span></div>
+          <button class="ro-btn ro-btn-primary" id="ro-upgrade-btn">Get Pro</button>
+        </div>
+
+        <div class="ro-account-footer">
+          <button class="ro-text-btn" id="ro-portal-btn">Manage Billing</button>
+          <button class="ro-text-btn ro-text-danger" id="ro-signout-btn">Sign Out</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <script src="panel.js"></script>
+</body>
+</html>

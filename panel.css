@@ -1,0 +1,147 @@
+/* ReachOut panel.css */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+[hidden] { display: none !important; }
+
+:root {
+  --accent:       #059669;
+  --accent-light: #ECFDF5;
+  --accent-dark:  #047857;
+  --danger:       #EF4444;
+  --warn:         #F59E0B;
+  --success:      #10B981;
+  --text:         #111827;
+  --text-2:       #6B7280;
+  --border:       #E5E7EB;
+  --bg:           #ffffff;
+  --bg-2:         #F9FAFB;
+  --radius:       8px;
+}
+
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px; color: var(--text); background: var(--bg); }
+
+.ro-app { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+
+/* Header */
+.ro-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.ro-logo { display: flex; align-items: center; gap: 7px; }
+.ro-logo-text { font-weight: 700; font-size: 14px; color: var(--text); letter-spacing: -0.2px; }
+
+/* Tabs */
+.ro-tabs { display: flex; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.ro-tab { flex: 1; padding: 9px 0; border: none; background: none; cursor: pointer; font-size: 11px; font-weight: 500; color: var(--text-2); border-bottom: 2px solid transparent; transition: color .15s, border-color .15s; }
+.ro-tab:hover { color: var(--text); }
+.ro-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* Panels */
+.ro-panel { display: none; flex-direction: column; flex: 1; overflow-y: auto; padding: 14px 12px; gap: 10px; }
+.ro-panel.active { display: flex; }
+
+/* Buttons */
+.ro-btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: var(--radius); border: none; font-size: 12px; font-weight: 500; cursor: pointer; transition: opacity .15s; width: 100%; justify-content: center; }
+.ro-btn:disabled { opacity: .5; cursor: not-allowed; }
+.ro-btn-primary { background: var(--accent); color: #fff; }
+.ro-btn-primary:hover:not(:disabled) { background: var(--accent-dark); }
+.ro-btn-secondary { background: var(--bg-2); color: var(--text); border: 1px solid var(--border); }
+.ro-btn-secondary:hover:not(:disabled) { background: var(--border); }
+.ro-icon-btn { background: none; border: none; cursor: pointer; color: var(--text-2); padding: 4px; border-radius: 4px; display: flex; align-items: center; }
+.ro-icon-btn:hover { color: var(--text); background: var(--bg-2); }
+.ro-text-btn { background: none; border: none; cursor: pointer; color: var(--accent); font-size: 12px; font-weight: 500; padding: 0; }
+.ro-text-btn:hover { text-decoration: underline; }
+.ro-text-danger { color: var(--danger); }
+
+/* Setup banner */
+.ro-setup-banner { display: flex; align-items: center; gap: 10px; background: #FFF7ED; border: 1px solid #FED7AA; border-radius: var(--radius); padding: 10px 12px; color: #9A3412; flex-shrink: 0; }
+.ro-setup-banner svg { flex-shrink: 0; }
+.ro-setup-banner-body { display: flex; flex-direction: column; gap: 1px; flex: 1; font-size: 12px; }
+.ro-setup-banner-body strong { font-size: 12px; }
+.ro-setup-btn { width: auto; padding: 5px 10px; white-space: nowrap; flex-shrink: 0; font-size: 11px; }
+
+/* Setup form */
+.ro-setup-form { display: flex; flex-direction: column; gap: 10px; background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; }
+
+/* Empty states */
+.ro-empty { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 40px 20px; text-align: center; color: var(--text-2); line-height: 1.5; font-size: 12px; }
+
+/* Profile card */
+.ro-profile-meta { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; }
+.ro-profile-name { font-weight: 600; font-size: 14px; margin-bottom: 2px; }
+.ro-profile-title { color: var(--text-2); font-size: 12px; }
+.ro-profile-company { color: var(--text-2); font-size: 12px; margin-top: 1px; }
+
+/* Spinner */
+.ro-spinner { display: flex; align-items: center; gap: 10px; color: var(--text-2); font-size: 12px; padding: 8px 0; }
+.ro-spinner-dot { width: 16px; height: 16px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: ro-spin .7s linear infinite; flex-shrink: 0; }
+@keyframes ro-spin { to { transform: rotate(360deg); } }
+.ro-spinning svg { animation: ro-spin 0.7s linear infinite; }
+
+/* Messages */
+.ro-msg { padding: 10px 12px; border-radius: var(--radius); font-size: 12px; line-height: 1.5; }
+.ro-msg-error { background: #FEF2F2; color: #991B1B; }
+.ro-msg-warn { background: #FFFBEB; color: #92400E; display: flex; flex-direction: column; gap: 6px; }
+.ro-msg-success { background: #ECFDF5; color: #065F46; }
+
+/* Email results */
+.ro-results-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; color: var(--text-2); margin-bottom: 6px; }
+.ro-email-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.ro-email-item { display: flex; align-items: center; justify-content: space-between; gap: 8px; background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 10px; }
+.ro-email-item.high { border-color: #A7F3D0; background: #F0FDF4; }
+.ro-email-addr { font-family: monospace; font-size: 12px; word-break: break-all; flex: 1; }
+.ro-confidence { font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 10px; white-space: nowrap; }
+.ro-conf-high   { background: #D1FAE5; color: #065F46; }
+.ro-conf-medium { background: #FEF3C7; color: #92400E; }
+.ro-copy-email-btn { background: none; border: 1px solid var(--border); border-radius: 4px; padding: 3px 7px; font-size: 11px; cursor: pointer; color: var(--text-2); white-space: nowrap; }
+.ro-copy-email-btn:hover { color: var(--text); background: var(--border); }
+
+/* Outreach messages */
+.ro-msg-block { display: flex; flex-direction: column; gap: 6px; }
+.ro-msg-header { display: flex; align-items: center; gap: 8px; }
+.ro-msg-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; color: var(--text-2); flex: 1; }
+.ro-char-count { font-size: 10px; color: var(--text-2); }
+.ro-char-count.over { color: var(--danger); font-weight: 600; }
+.ro-msg-textarea { width: 100%; resize: vertical; padding: 8px 10px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 12px; line-height: 1.6; font-family: inherit; color: var(--text); background: var(--bg); }
+.ro-msg-textarea:focus { outline: none; border-color: var(--accent); }
+
+/* Forms */
+.ro-form-row { display: flex; flex-direction: column; gap: 4px; }
+.ro-label { font-size: 11px; font-weight: 500; color: var(--text-2); }
+.ro-input { padding: 8px 10px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 13px; color: var(--text); background: var(--bg); font-family: inherit; }
+.ro-input:focus { outline: none; border-color: var(--accent); }
+.ro-textarea-sm { min-height: 64px; resize: vertical; }
+
+/* Pipeline */
+.ro-pipe-header { display: flex; align-items: center; justify-content: space-between; }
+.ro-pipe-count { font-size: 12px; color: var(--text-2); }
+.ro-pipe-actions { display: flex; gap: 4px; }
+.ro-pipe-empty { color: var(--text-2); text-align: center; padding: 30px 12px; line-height: 1.6; font-size: 12px; }
+.ro-contact-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.ro-contact-item { border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px; }
+.ro-contact-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.ro-contact-name { font-weight: 600; font-size: 13px; }
+.ro-contact-role { color: var(--text-2); font-size: 12px; margin-top: 2px; }
+.ro-contact-email { font-family: monospace; font-size: 11px; color: var(--accent); margin-top: 4px; }
+.ro-contact-bottom { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+.ro-status-select { font-size: 11px; border: 1px solid var(--border); border-radius: 4px; padding: 2px 6px; color: var(--text); background: var(--bg); cursor: pointer; }
+.ro-delete-btn { background: none; border: none; cursor: pointer; color: var(--text-2); font-size: 16px; line-height: 1; padding: 0 2px; }
+.ro-delete-btn:hover { color: var(--danger); }
+
+/* Account */
+.ro-auth-desc { color: var(--text-2); line-height: 1.5; font-size: 12px; margin-bottom: 4px; }
+.ro-auth-msg { font-size: 12px; color: var(--danger); }
+.ro-auth-btns { display: flex; flex-direction: column; gap: 7px; }
+.ro-account-info { display: flex; align-items: center; justify-content: space-between; }
+.ro-account-email { font-weight: 500; font-size: 13px; word-break: break-all; }
+.ro-plan-badge { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; background: var(--bg-2); border: 1px solid var(--border); color: var(--text-2); white-space: nowrap; }
+.ro-plan-badge.pro { background: var(--accent-light); color: var(--accent); border-color: #A7F3D0; }
+.ro-usage-row { display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: var(--text-2); }
+.ro-usage-count { font-weight: 600; color: var(--text); }
+.ro-usage-bar { height: 6px; background: var(--bg-2); border-radius: 3px; overflow: hidden; }
+.ro-usage-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width .3s; }
+.ro-upgrade-box { background: var(--accent-light); border: 1px solid #A7F3D0; border-radius: var(--radius); padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+.ro-upgrade-header { font-weight: 700; font-size: 13px; color: var(--accent-dark); }
+.ro-upgrade-list { padding-left: 14px; color: var(--text-2); font-size: 11px; line-height: 1.8; }
+.ro-upgrade-price { font-size: 22px; font-weight: 700; color: var(--text); }
+.ro-upgrade-price span { font-size: 12px; font-weight: 500; color: var(--text-2); }
+.ro-account-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 4px; }
+
+#ro-account-section { display: flex; flex-direction: column; gap: 14px; }
+#ro-auth-section { display: flex; flex-direction: column; gap: 10px; }

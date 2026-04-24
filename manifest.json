@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "ReachOut — LinkedIn Email Finder",
+  "version": "1.0.0",
+  "description": "Find verified professional emails and generate personalized outreach messages directly from any LinkedIn profile.",
+  "minimum_chrome_version": "114",
+
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "tabs",
+    "sidePanel"
+  ],
+
+  "host_permissions": [
+    "https://www.linkedin.com/*"
+  ],
+
+  "background": {
+    "service_worker": "background.js"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["https://www.linkedin.com/in/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+
+  "side_panel": {
+    "default_path": "panel.html"
+  },
+
+  "action": {
+    "default_title": "ReachOut"
+  }
+}
