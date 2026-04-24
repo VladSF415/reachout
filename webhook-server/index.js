@@ -44,8 +44,7 @@ app.use(express.json());
 const PORT         = process.env.PORT || 3000;
 const FRONTEND_URL = process.env.FRONTEND_URL || 'https://reachout-production.up.railway.app';
 
-// TODO: Create a Stripe product at $29/month and paste the price ID here
-const PRICE_PRO = process.env.STRIPE_PRICE_ID || 'price_YOUR_STRIPE_PRICE_ID';
+const PRICE_PRO = 'price_1TPYMaIwh8neLfLGNYutwJdh';
 
 const MONTHLY_CAPS = { free: 10, pro: 300 };
 
