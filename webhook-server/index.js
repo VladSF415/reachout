@@ -1,9 +1,10 @@
 // ReachOut webhook server — Railway (Node.js + Express)
 'use strict';
 
-const express = require('express');
-const Stripe   = require('stripe');
-const admin    = require('firebase-admin');
+const express    = require('express');
+const Stripe     = require('stripe');
+const admin      = require('firebase-admin');
+const { Resend } = require('resend');
 const dns      = require('dns').promises;
 const net      = require('net');
 
@@ -770,6 +771,31 @@ app.get('/cancel', (_req, res) => {
       <p>No charge was made. You can close this tab.</p>
     </body></html>
   `);
+});
+
+app.post('/send-verification', async (req, res) => {
+  const { idToken, email } = req.body || {};
+  if (!idToken || !email) return res.status(400).json({ error: 'Missing idToken or email.' });
+  try {
+    const decoded = await verifyToken(idToken);
+    if (!decoded || decoded.email !== email) return res.status(401).json({ error: 'Unauthorized.' });
+    const link = await admin.auth().generateEmailVerificationLink(email);
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    await resend.emails.send({
+      from: 'ReachOut <noreply@extensionsmarket.com>',
+      to: email,
+      subject: 'Verify your ReachOut account',
+      html: `<div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px">
+        <h2 style="margin:0 0 8px">Verify your email</h2>
+        <p style="color:#555;margin:0 0 24px">Click the button below to confirm your ReachOut account.</p>
+        <a href="${link}" style="display:inline-block;background:#2563eb;color:#fff;text-decoration:none;padding:12px 24px;border-radius:8px;font-weight:600">Verify Email</a>
+        <p style="color:#999;font-size:12px;margin:24px 0 0">If you didn't create this account, you can ignore this email.</p>
+      </div>`,
+    });
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
 });
 
 app.listen(PORT, () => console.log(`ReachOut server on port ${PORT}`));

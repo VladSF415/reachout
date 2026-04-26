@@ -353,7 +353,13 @@ async function authSignIn(email, password) {
 async function authSignUp(email, password) {
   const { ok, data } = await _fbPost('signUp', { email, password, returnSecureToken: true });
   if (!ok) return { success: false, error: _friendlyError(data) };
-  await _fbPost('sendOobCode', { requestType: 'VERIFY_EMAIL', idToken: data.idToken });
+  try {
+    await fetch(`${WEBHOOK_BASE}/send-verification`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idToken: data.idToken, email }),
+    });
+  } catch {}
   return { success: false, needsConfirmation: true, error: 'Account created! Check your inbox to confirm your email, then sign in.' };
 }
 
