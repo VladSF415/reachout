@@ -777,7 +777,8 @@ app.post('/send-verification', async (req, res) => {
   const { idToken, email } = req.body || {};
   if (!idToken || !email) return res.status(400).json({ error: 'Missing idToken or email.' });
   try {
-    const decoded = await verifyToken(idToken);
+    if (!admin.apps.length) getDb();
+    const decoded = await admin.auth().verifyIdToken(idToken);
     if (!decoded || decoded.email !== email) return res.status(401).json({ error: 'Unauthorized.' });
     const link = await admin.auth().generateEmailVerificationLink(email);
     const resend = new Resend(process.env.RESEND_API_KEY);
